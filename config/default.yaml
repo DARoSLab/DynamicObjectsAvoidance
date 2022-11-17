@@ -1,0 +1,138 @@
+%YAML:1.0
+# 0 stereo, 1 rgbd, 2 event_rgbd, 3 event_rgbd_live, 4 rgbd_live, 5 
+mode: 2
+# 1: save rgb and depth image (only work in *_live mode)
+# 0: do not save images
+store_rgbd: 0
+# 1: online mode
+# online_rgbd: 0
+
+# optical_flow, direct
+frontend_mode: direct
+# photometric, reprojection
+backend_mode: photometric
+
+# 1: visualize alignment result, 0: do not visualize
+visualize_alignment: 0
+
+# data
+# the tum dataset directory, change it to yours! 
+# dataset_dir: /media/xiang/Data/Dataset/Kitti/dataset/sequences/00
+kitti_stereo_dataset_path: /home/zh/data/kitti/data_odometry_gray/dataset/sequences/05
+rgbd_dataset_path: /home/zh/data/img
+timestamp_path: /home/zh/data/img/rgbd_timestamp.txt
+# event_data_file_name: /2022-09-06 23_21_58
+# event_dataset_path: /home/zh/data/event/my_recording
+event_dataset_path: /home/zh/data/event/my_recording/2022-09-27 191356.aedat4
+# event_dataset_path: /home/zh/test.aedat4
+# config file directory
+cfg_file_path: /home/zh/code/DynamicObjectsAvoidance/config/default.yaml
+
+# camera intrinsics
+camera.fx: 517.3
+camera.fy: 516.5
+camera.cx: 325.1
+camera.cy: 249.7
+
+# 640*360 RGBD camera intrinsic parameters are not used
+rgbdcameracolor.fx: 316.5960388183594
+rgbdcameracolor.fy: 316.2420959472656
+rgbdcameracolor.cx: 317.1746520996094
+rgbdcameracolor.cy: 187.1136474609375
+rgbdcameracolor.coeff0: -0.058237917721271515
+rgbdcameracolor.coeff1: 0.06927599757909775
+rgbdcameracolor.coeff2: 0.00036212298437021673
+rgbdcameracolor.coeff3: -0.00012013775267405435
+rgbdcameracolor.coeff4: -0.02208169922232628
+rgbdcameradepth.fx: 318.9285888671875
+rgbdcameradepth.fy: 318.9285888671875
+rgbdcameradepth.cx: 317.31512451171875
+rgbdcameradepth.cy: 181.547119140625
+rgbddepth2color.qx: 0.00138998
+rgbddepth2color.qy: -0.00243411
+rgbddepth2color.qz: 0.00100856
+rgbddepth2color.qw: 0.999996
+rgbddepth2color.x: -0.0590564
+rgbddepth2color.y: 0.000200308
+rgbddepth2color.z: 0.000599079
+# Order for Brown-Conrady: [k1, k2, p1, p2, k3]
+rgbdcameradepth.coeff0: 0.0
+rgbdcameradepth.coeff1: 0.0
+rgbdcameradepth.coeff2: 0.0
+rgbdcameradepth.coeff3: 0.0
+rgbdcameradepth.coeff4: 0.0
+rgbdcamera.depth_scale: 0.001
+rgbdcamera.to_meter: 0.001
+
+eventcamera.width: 346
+eventcamera.height: 260
+# eventcamera.fx: 247.79715445048092
+# eventcamera.fy: 248.56667444361196
+# eventcamera.cx: 169.55466060304357
+# eventcamera.cy: 127.80121854154352
+# eventcamera.coeff0: -0.3761634680820641
+# eventcamera.coeff1: 0.13373692165549333
+# eventcamera.coeff2: -0.0004049633620546339
+# eventcamera.coeff3: 0.0007190723743918759
+# eventcamera.coeff4: 0.0
+# original params
+# eventcamera.fx: 270.90621343338627
+# eventcamera.fy: 272.90027628874823
+# eventcamera.cx: 174.9547544095299
+# eventcamera.cy: 120.34896306031801
+# eventcamera.coeff0: -0.4031243016948425
+# eventcamera.coeff1: 0.14783544708916174
+# eventcamera.coeff2: -0.00019260928855622706
+# eventcamera.coeff3: 0.0009760346144028222
+# eventcamera.coeff4: 0.0
+# before recalibration
+# eventcamera.fx: 298.90621343338627
+# eventcamera.fy: 272.90027628874823
+# eventcamera.cx: 174.9547544095299
+# eventcamera.cy: 120.34896306031801
+# eventcamera.coeff0: -0.4031243016948425
+# eventcamera.coeff1: 0.14783544708916174
+# eventcamera.coeff2: -0.00019260928855622706
+# eventcamera.coeff3: 0.0009760346144028222
+# eventcamera.coeff4: 0.0
+# recalibration
+eventcamera.fx: 268.32899851283725
+eventcamera.fy: 265.67912028373405
+eventcamera.cx: 176.15906007925688
+eventcamera.cy: 124.50199284270914
+eventcamera.coeff0: -0.367374356072565
+eventcamera.coeff1: 0.1310262837022572
+eventcamera.coeff2: 0.0006153768823804728
+eventcamera.coeff3: -0.0001580673015318537
+eventcamera.coeff4: 0.0
+
+# rgbdcolor2event_qx: -0.0023273
+# rgbdcolor2event_qy: -0.0022736
+# rgbdcolor2event_qz: 0.0039468
+# rgbdcolor2event_qw: 0.9999869
+rgbdcolor2event_qx: -0.000
+rgbdcolor2event_qy: -0.000
+rgbdcolor2event_qz: 0.000
+rgbdcolor2event_qw: 1.0
+# rgbdcolor2event_tx: 0.01770424742915967
+rgbdcolor2event_tx: 0.01770424742915967
+rgbdcolor2event_ty: -0.04575225606916674
+# rgbdcolor2event_tz: -0.04462099726524716
+rgbdcolor2event_tz: -0.024462099726524716
+
+pyramid_layers: 3
+pyramid_ratio: 0.7
+
+num_active_keyframes: 10
+num_features: 150
+num_features_init: 35
+num_features_tracking: 25
+num_features_tracking_bad: 15
+num_features_needed_for_keyframe: 500
+
+enable_autoexposure: 0
+exposure: 9000
+background_activity_time: 2000
+enable_noise_filter: 1
+time_increment: 1000
+decay_ms: 1

@@ -28,7 +28,7 @@ struct Frame {
     bool is_removed_ = false;       // whether be removed
     int64_t timestamp_;             // timestamp for frame (rgb image)
     int64_t depth_timestamp_;             // timestamp for depth image
-    SE3 pose_;                      // Tcw 形式Pose
+    SE3 pose_;                      // Tcw format
     SE3 pose_tmp_;
     SE3 pose_tmp_last_;
     bool has_new_tmp_pose_ = false;
@@ -81,10 +81,10 @@ struct Frame {
         std::unique_lock<std::mutex> lck(pose_mutex_);
         pose_tmp_last_ = pose;
     }
-    /// 设置关键帧并分配并键帧id
+    /// set keyframe and asign keyframe id
     void SetKeyFrame();
 
-    /// 工厂构建模式，分配id 
+    /// create frame and asign id
     static std::shared_ptr<Frame> CreateFrame();
 
     double findDepth (int y, int x);

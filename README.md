@@ -23,9 +23,9 @@ sudo apt-get install git gcc-10 g++-10 cmake boost-inivation libopencv-dev libei
 
 * Sophus
 
+```
 # Install sophus from source and extract it : https://github.com/strasdat/Sophus.git
 # (rename sophus-master to sophus) and move it to /usr/local/include
-```
 sudo cmake ..
 sudo make
 ```

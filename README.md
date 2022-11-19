@@ -1,5 +1,51 @@
 # DynamicObjectsAvoidance
 
+## Dependencies
+The following packages need to be installed:
+
+* dv-processing 
+```
+# Package in Ubuntu 18.04
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo add-apt-repository ppa:inivation-ppa/inivation-bionic
+sudo apt update
+sudo apt install dv-processing
+
+# Python bindings
+sudo apt install dv-processing-python
+
+# Dependencies in Ubuntu 18.04
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo add-apt-repository ppa:inivation-ppa/inivation-bionic
+sudo apt-get update
+sudo apt-get install git gcc-10 g++-10 cmake boost-inivation libopencv-dev libeigen3-dev libcaer-dev libfmt-dev liblz4-dev libzstd-dev
+```
+
+* Sophus
+
+# Install sophus from source and extract it : https://github.com/strasdat/Sophus.git
+# (rename sophus-master to sophus) and move it to /usr/local/include
+```
+sudo cmake ..
+sudo make
+```
+
+* Glog
+```
+sudo apt install libgoogle-glog-dev 
+sudo apt-get install libgflags-dev
+sudo apt install libgoogle-glog-dev
+sudo apt-get install protobuf-compiler libprotobuf-dev
+```
+
+* GTest
+```
+sudo apt-get install libgtest-dev
+cd /usr/src/gtest
+sudo cmake CMakeLists.txt
+sudo make
+sudo cp *.a /usr/lib
+```
 
 ## Todo
 realsense api.h head file

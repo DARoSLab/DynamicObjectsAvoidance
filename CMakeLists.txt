@@ -24,6 +24,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 # Sophus
 find_package(Sophus REQUIRED)
 # set(Sophus_LIBRARIES libSophus.so)
+include_directories("/usr/local/include/Sophus")
 include_directories(${Sophus_INCLUDE_DIRS})
 
 # G2O
@@ -80,6 +81,9 @@ set(THIRD_PARTY_LIBS
         libcaer::caer
         /usr/lib/x86_64-linux-gnu/libdl.so
         )
+
+# Control (tested)
+# set(THIRD_PARTY_LIBS -pthread /home/hochul/Repository/DynamicObjectsAvoidance/lib/libunitree_legged_sdk_amd64.so lcm)
 
 enable_testing()
 

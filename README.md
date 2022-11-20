@@ -47,8 +47,14 @@ sudo make
 sudo cp *.a /usr/lib
 ```
 
+* g20
+
+Install g2o and build from source: https://github.com/RainerKuemmerle/g2o
+
+
 ## Todo
-realsense api.h head file
+- [ ] realsense api.h head file
+- [ ] Remove realsense
 
 ## Version Requriment
 OpenCV >= 4.2.0 (tested 4.4.0)

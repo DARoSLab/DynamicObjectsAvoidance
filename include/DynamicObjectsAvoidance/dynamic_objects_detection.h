@@ -4,10 +4,12 @@
 
 #include "DynamicObjectsAvoidance/common_include.h"
 #include "DynamicObjectsAvoidance/data_reader.h"
+#include "DynamicObjectsAvoidance/config.h"
+#include "DynamicObjectsAvoidance/camera.h"
 
 // // dv-processing headers
-// #include <dv-processing/core/frame.hpp>
-// #include <dv-processing/io/camera_capture.hpp>
+#include <dv-processing/core/frame.hpp>
+#include <dv-processing/io/camera_capture.hpp>
 
 namespace DynamicObjectsAvoidance {
 

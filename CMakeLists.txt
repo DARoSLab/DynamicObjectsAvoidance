@@ -65,6 +65,7 @@ find_package(realsense2 2.50.0)
 # message(${realsense2_INCLUDE_DIR})
 
 set(THIRD_PARTY_LIBS
+        fmt::fmt
         ${OpenCV_LIBS}
         ${Sophus_LIBRARIES}
         ${Pangolin_LIBRARIES} GL GLU GLEW glut
@@ -74,7 +75,6 @@ set(THIRD_PARTY_LIBS
         ${GFLAGS_LIBRARIES}
         pthread
         ${CSPARSE_LIBRARY}
-        fmt::fmt
         # ${DV_LIBRARIES} # should replace this with dv::processing
         dv::processing
         ${realsense2_LIBRARY}

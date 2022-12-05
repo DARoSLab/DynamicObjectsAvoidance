@@ -43,7 +43,7 @@ bool DynamicObjectsAvoidance::Init() {
 
 void DynamicObjectsAvoidance::Run() {
     while (1) {
-        // LOG(INFO) << "VO is running";
+        LOG(INFO) << "Dynamic Objects Avoidance is running";
         if (Step() == false) {
             LOG(INFO)<<"step = false";
             break;

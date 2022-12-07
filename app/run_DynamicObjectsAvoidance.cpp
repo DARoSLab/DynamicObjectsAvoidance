@@ -9,8 +9,8 @@ int main(int argc, char **argv) {
 
     DynamicObjectsAvoidance::DynamicObjectsAvoidance::Ptr DOA(
         new DynamicObjectsAvoidance::DynamicObjectsAvoidance(FLAGS_config_file));
-    assert(DOA->Init() == true);
-    DOA->Run();
+    // assert(DOA->Init() == true);
+    // DOA->Run();
 
     LOG(INFO)<<"Hello Dynamic Objects Avoidance";
 

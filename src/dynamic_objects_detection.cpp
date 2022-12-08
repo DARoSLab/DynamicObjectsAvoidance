@@ -16,9 +16,9 @@ DynamicObjectsAvoidance::DynamicObjectsAvoidance(std::string &config_path)
     // LOG(INFO)<<"cfg_path = "<<cfg_path;
     // LOG(INFO)<<"2";
     time_surface_ = std::make_unique<TimeSurface>(config_path,
-                                346, 260, 1);
+                                320, 240, 1);
     LOG(INFO)<<"3";
-    time_surface_accumulator_ = std::make_unique<TimeSurfaceAccumulator>(cv::Size(346, 260));
+    time_surface_accumulator_ = std::make_unique<TimeSurfaceAccumulator>(cv::Size(320, 240));
     LOG(INFO)<<"4";
 }
 
@@ -89,7 +89,7 @@ bool DynamicObjectsAvoidance::Step() {
         auto len = slice_.size();
         LOG(INFO)<<"event size = "<<len;
         if (len > 10) {
-            cv::Mat event_img = cv::Mat::zeros(260, 346, CV_8UC1);
+            cv::Mat event_img = cv::Mat::zeros(240, 320, CV_8UC1);
             auto e = events_->back();
             LOG(INFO)<<"1";
             time_surface_->accept(slice_);

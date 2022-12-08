@@ -26,7 +26,7 @@ DataReader::DataReader(const std::string& cfg_path) : cfg_path_(cfg_path) {
     rgbd_timestamp_file_out_.precision(6);
     rgbd_timestamp_file_out_.flags(std::ios::fixed);
     rgbd_timestamp_file_out_.fill('0');
-    accumulator_ = std::make_unique<dv::Accumulator>(cv::Size(346, 260));
+    accumulator_ = std::make_unique<dv::Accumulator>(cv::Size(320, 240));
     accumulator_->setEventContribution(static_cast<float>(0.15));
     accumulator_->setMaxPotential(static_cast<float>(1.0));
     accumulator_->setMinPotential(static_cast<float>(0.0));
@@ -36,7 +36,7 @@ DataReader::DataReader(const std::string& cfg_path) : cfg_path_(cfg_path) {
     accumulator_->setSynchronousDecay(false);
     accumulator_->setDecayFunction(static_cast<dv::Accumulator::Decay>(dv::Accumulator::Decay::STEP));
 
-    pixel_accumulator_ = std::make_unique<dv::PixelAccumulator>(cv::Size(346, 260));
+    pixel_accumulator_ = std::make_unique<dv::PixelAccumulator>(cv::Size(320, 240));
     pixel_accumulator_->setIgnorePolarity(true);
     pixel_accumulator_->setContribution(static_cast<float>(1)); // 0.3
     pixel_accumulator_->setNeutralValue(static_cast<float>(0.0));
@@ -45,7 +45,7 @@ DataReader::DataReader(const std::string& cfg_path) : cfg_path_(cfg_path) {
     mEventBuffer_ = new dv::EventStore;
     int64_queue_ = new std::queue<int64_t>;
     time_surface_mine_ = std::make_unique<TimeSurface>(cfg_path,
-                                    346, 260, 10);
+                                    320, 240, 10);
 }
 
 DataReader::DataReader(const std::string& event_dataset_path, const std::string& rgbd_dataset_path, 
@@ -63,7 +63,7 @@ DataReader::DataReader(const std::string& event_dataset_path, const std::string&
     std::string timestamp_path = Config::Get<std::string>("timestamp_path");
     rgbd_timestamp_file_out_.open(timestamp_path, std::ios::app);
     rgbd_timestamp_file_in_.open(timestamp_path, std::ios::app);
-    accumulator_ = std::make_unique<dv::Accumulator>(cv::Size(346, 260));
+    accumulator_ = std::make_unique<dv::Accumulator>(cv::Size(320, 240));
     accumulator_->setEventContribution(static_cast<float>(0.15));
     accumulator_->setMaxPotential(static_cast<float>(1.0));
     accumulator_->setMinPotential(static_cast<float>(0.0));
@@ -73,7 +73,7 @@ DataReader::DataReader(const std::string& event_dataset_path, const std::string&
     accumulator_->setSynchronousDecay(false);
     accumulator_->setDecayFunction(static_cast<dv::Accumulator::Decay>(dv::Accumulator::Decay::STEP));
 
-    pixel_accumulator_ = std::make_unique<dv::PixelAccumulator>(cv::Size(346, 260));
+    pixel_accumulator_ = std::make_unique<dv::PixelAccumulator>(cv::Size(320, 240));
     pixel_accumulator_->setIgnorePolarity(true);
     pixel_accumulator_->setContribution(static_cast<float>(0.3));
     pixel_accumulator_->setNeutralValue(static_cast<float>(0.0));
@@ -81,7 +81,7 @@ DataReader::DataReader(const std::string& event_dataset_path, const std::string&
 
     mEventBuffer_ = new dv::EventStore;
     time_surface_mine_ = std::make_unique<TimeSurface>(cfg_path,
-                                    346, 260, 10);
+                                    320, 240, 10);
 }
 
 DataReader::~DataReader() {

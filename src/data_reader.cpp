@@ -157,13 +157,13 @@ void DataReader::EventsReadingThread() {
             //     mRGBBuffer_.push(dv::Frame((*frame).timestamp, img_undistort));
             //     frame = mEventReader_.getNextFrame();
             // }
-            mEventsTimestampQueue_.consume_all([&](const int64_t timestamp) {
+            // mEventsTimestampQueue_.consume_all([&](const int64_t timestamp) {
 
                 if (!events.has_value()) {
 				    std::lock_guard<boost::recursive_mutex> lockGuard(mReaderMutex_); // lock mEventReader_
                     events = mEventReader_.getNextEventBatch();
                 }
-                while (events.has_value()  && timestamp >= events->getHighestTime()) {
+                while (events.has_value()) {
                     time_event_ = (*events).getLowestTime();
                     dv::EventStore store;
                     if (mNoiseFilter_ != nullptr) {
@@ -177,8 +177,9 @@ void DataReader::EventsReadingThread() {
                     mEventBuffer_->retainDuration(mStoreTimeLimit_);
 				    std::lock_guard<boost::recursive_mutex> lockGuard(mReaderMutex_); // lock mEventReader_
                     events = mEventReader_.getNextEventBatch();
+                    // LOG(INFO) << "Reading event";
                 }
-            });
+            // });
         }
     // }
 }
@@ -493,7 +494,7 @@ bool DataReader::InitEventCamera() {
 
     int64_t background_activity_time = Config::Get<int>("background_activity_time");
 
-    if (mode_ == 3) { // event_rgbd_live mode
+    if (mode_ == 3 || mode_ == 5) { // event_rgbd_live mode
         mEventReader_ = EventReader(""); // empty string will opens first discovered camera of any type.
     } else {
         // std::string camera_name = "DAVIS346_00000545";
@@ -540,7 +541,7 @@ bool DataReader::InitEventCamera() {
 		    mNoiseFilter_->setBackgroundActivityDuration(dv::Duration(background_activity_time));
 		}
     }
-    mClock_ = std::thread(&DataReader::Clock, this, times->first, times->second, Config::Get<int>("time_increment"));
+    // mClock_ = std::thread(&DataReader::Clock, this, times->first, times->second, Config::Get<int>("time_increment"));
     mEventsReadingThread_ = std::thread(&DataReader::EventsReadingThread, this);
     mFrameReadingThread_ = std::thread(&DataReader::FrameReadingThread, this);
     mImuReadingThread_ = std::thread(&DataReader::ImuReadingThread, this);

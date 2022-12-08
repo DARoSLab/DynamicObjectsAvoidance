@@ -1,6 +1,6 @@
 %YAML:1.0
-# 0 stereo, 1 rgbd, 2 event_rgbd, 3 event_rgbd_live, 4 rgbd_live, 5 
-mode: 2
+# 0 stereo, 1 rgbd, 2 event_rgbd, 3 event_rgbd_live, 4 rgbd_live, 5 event_live
+mode: 5
 # 1: save rgb and depth image (only work in *_live mode)
 # 0: do not save images
 store_rgbd: 0

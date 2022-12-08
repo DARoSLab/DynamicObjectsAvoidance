@@ -6,6 +6,7 @@
 #include "DynamicObjectsAvoidance/data_reader.h"
 #include "DynamicObjectsAvoidance/config.h"
 #include "DynamicObjectsAvoidance/camera.h"
+#include "DynamicObjectsAvoidance/time_surface.h"
 
 // // dv-processing headers
 #include <dv-processing/core/frame.hpp>
@@ -40,13 +41,25 @@ class DynamicObjectsAvoidance {
      */
     bool Step();
 
+    void SetEventStore (dv::EventStore* events) {
+        events_ = events;
+    }
+
    private:
     bool inited_ = false;
     std::string config_file_path_;
+    dv::EventStore* events_ = nullptr;
 
     // dataset
     DataReader::Ptr data_reader_ = nullptr;
     int store_rgbd_;
+
+    std::unique_ptr<TimeSurface> time_surface_ = nullptr;
+    std::unique_ptr<TimeSurfaceAccumulator> time_surface_accumulator_ = nullptr;
+    dv::EventStore slice_;
+
+    cv::Point2i pre_pos_;
+
 };
 }  // namespace DynamicObjectsAvoidance
 

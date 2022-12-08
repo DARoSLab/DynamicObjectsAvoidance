@@ -44,7 +44,7 @@ void TimeSurface::accumulate(const dv::EventStore &packet) {
  * @param store The event store to be added
  */
 void TimeSurface::accept(const dv::EventStore &store) {
-    for (uint64_t it = 0; it < store.size()-1; ++it) {
+    for (uint64_t it = 1; it < store.size()-2; ++it) {
         time_matrix_(store.at(it).y(), store.at(it).x()) = store.at(it).timestamp();
     }
 }
@@ -87,6 +87,7 @@ void TimeSurface::createTimeSurface(int64_t& highest_time) {
     double expVal(0.0);
     auto t1 = std::chrono::steady_clock::now();
     int64_t sum_diff(0);
+    time_surface_map_tmp_ = cv::Mat::zeros(height_, width_, CV_64F);
     // std::vector<int64_t> sum_diff_vec;
     for(size_t x=0; x<width_; ++x) {
         for(size_t y=0; y<height_; ++y) {
@@ -96,29 +97,32 @@ void TimeSurface::createTimeSurface(int64_t& highest_time) {
             // double val = double(t - min) / double(range);
             // time_matrix_double_(y,x) = val;
             if (y>6&&y<height_-6&&x>6&&x<width_-6) {
-                u_int8_t cnt(0);
-                for (size_t patt_i = 0; patt_i < 8; ++patt_i) {
-                    int64_t diff = highest_time - time_matrix_(y + pattern_scale_[patt_i][0], x + pattern_scale_[patt_i][1]);
-                    if (diff > 250000) continue;
-                    sum_diff+=diff;
-                    ++cnt;
-                }
-                if (cnt == 0) continue;
+                // u_int8_t cnt(0);
+                // for (size_t patt_i = 0; patt_i < 8; ++patt_i) {
+                //     int64_t diff = highest_time - time_matrix_(y + pattern_scale_[patt_i][0], x + pattern_scale_[patt_i][1]);
+                //     if (diff > 250000) continue;
+                //     sum_diff+=diff;
+                //     ++cnt;
+                // }
+                // if (cnt == 0) continue;
                 
-                sum_diff = int64_t(sum_diff / cnt);
-                if (sum_diff < 260) continue;
-                int16_t scale = int16_t(-150000000/(sum_diff-200)+100);//std::pow(scale_begin_end,0.5)*10.0;
+                // sum_diff = int64_t(sum_diff / cnt);
+                // if (sum_diff < 260) continue;
+                // int16_t scale = int16_t(-150000000/(sum_diff-200)+100);//std::pow(scale_begin_end,0.5)*10.0;
+                // dt = (highest_time - t)*1e-6;
+                // if (sum_diff < 90000) {
+                //     expVal = scale*dt*dt+1;
+                // } else {
+                //     expVal = -10000*dt*dt+1;
+                // }
+
                 dt = (highest_time - t)*1e-6;
-                if (sum_diff < 90000) {
-                    expVal = scale*dt*dt+1;
-                } else {
-                    expVal = -10000*dt*dt+1;
-                }
-                time_surface_map_tmp_.ptr<double>(y)[x] = expVal;
+                expVal = -10000*dt*dt+1;
+                time_surface_map_tmp_.ptr<double>(y)[x] = 1;
             } else {
                 dt = (highest_time - t)*1e-6;
                 expVal = -10000*dt*dt+1;
-                time_surface_map_tmp_.ptr<double>(y)[x] = expVal;
+                time_surface_map_tmp_.ptr<double>(y)[x] = 1;
             }
         }
     }

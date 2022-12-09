@@ -103,6 +103,9 @@ bool DynamicObjectsAvoidance::Step() {
             }
             cv::Mat img_med;
             cv::medianBlur(event_img, img_med, 3);
+            cv::imshow("event_img", event_img);
+            cv::imshow("img_med", img_med);
+            cv::waitKey(1);
 
             for (int16_t v = 0; v < 240; y++) {
 				for (int16_t u = 0; u < 320; x++) {
@@ -122,8 +125,8 @@ bool DynamicObjectsAvoidance::Step() {
 
 
 
-            auto time = events_->getHighestTime()-1;
-            time_surface_->createTimeSurface(time);
+            // auto time = events_->getHighestTime()-1;
+            // time_surface_->createTimeSurface(time);
             // LOG(INFO)<<"3";
             LOG(INFO)<<"type = "<<time_surface_->time_surface_map_.type();
             cv::Mat ts_color;

@@ -95,7 +95,8 @@ bool DynamicObjectsAvoidance::Step() {
             time_surface_->accept(slice_);
             LOG(INFO)<<"2";
 
-            uint64_t x(0),y(0),cnt(1);
+            uint64_t x(0),y(0);
+            double cnt(0.01);
             for (uint64_t it = 0; it < slice_.size(); ++it) {
                 // time_matrix_(store.at(it).y(), store.at(it).x()) = store.at(it).timestamp();
                 
@@ -103,13 +104,14 @@ bool DynamicObjectsAvoidance::Step() {
             }
             cv::Mat img_med;
             cv::medianBlur(event_img, img_med, 3);
-            cv::imshow("event_img", event_img);
-            cv::imshow("img_med", img_med);
-            cv::waitKey(1);
+            // cv::imshow("event_img", event_img);
+            // cv::imshow("img_med", img_med);
+            // cv::waitKey(1);
+            LOG(INFO)<<"img type = "<<img_med.type();
 
-            for (int16_t v = 0; v < 240; y++) {
-				for (int16_t u = 0; u < 320; x++) {
-                    if (event_img.ptr<uchar>(v)[u] > 200) {
+            for (int v = 0; v < 240; v++) {
+				for (int u = 0; u < 320; u++) {
+                    if (int(img_med.ptr<uchar>(v)[u]) > 250) {
                         x += u;
                         y += v;
                         cnt++;

@@ -98,14 +98,27 @@ bool DynamicObjectsAvoidance::Step() {
             uint64_t x(0),y(0),cnt(1);
             for (uint64_t it = 0; it < slice_.size(); ++it) {
                 // time_matrix_(store.at(it).y(), store.at(it).x()) = store.at(it).timestamp();
-                x += slice_.at(it).x();
-                y += slice_.at(it).y();
-                cnt++;
+                
                 event_img.ptr<uchar>(slice_.at(it).y())[slice_.at(it).x()] = 255;
             }
+            cv::Mat img_med;
+            cv::medianBlur(event_img, img_med, 3);
+
+            for (int16_t v = 0; v < 240; y++) {
+				for (int16_t u = 0; u < 320; x++) {
+                    if (event_img.ptr<uchar>(v)[u] > 200) {
+                        x += u;
+                        y += v;
+                        cnt++;
+                    }
+
+                }
+            }
+
+
             x /= cnt;
             y /= cnt;
-            LOG(INFO)<<"xy = "<<x<<"  "<<y;
+            // LOG(INFO)<<"xy = "<<x<<"  "<<y;
 
 
 
@@ -114,7 +127,7 @@ bool DynamicObjectsAvoidance::Step() {
             // LOG(INFO)<<"3";
             LOG(INFO)<<"type = "<<time_surface_->time_surface_map_.type();
             cv::Mat ts_color;
-            cv::cvtColor(event_img, ts_color, cv::COLOR_GRAY2BGR);
+            cv::cvtColor(img_med, ts_color, cv::COLOR_GRAY2BGR);
             cv::circle(ts_color, cv::Point(x, y), 5, cv::Scalar(0,0,255), 2, 8, 0);
 
 
@@ -125,14 +138,17 @@ bool DynamicObjectsAvoidance::Step() {
             pre_pos_ = curr_pos;
 
             static uint64_t saving_cnt(0);
+            LOG(INFO)<<"0";
             cv::imwrite("/home/zh/data/dyn_detection/"+std::to_string(saving_cnt)+".png", ts_color);
+            LOG(INFO)<<"1";
             saving_cnt++;
 
-            cv::namedWindow("ts img1", cv::WINDOW_NORMAL);
-            cv::namedWindow("ts_color", cv::WINDOW_NORMAL);
-            cv::imshow("ts img1", event_img);
-            cv::imshow("ts_color", ts_color);
-            cv::waitKey(1);
+            // // cv::namedWindow("ts img1", cv::WINDOW_NORMAL);
+            // cv::namedWindow("ts_color", cv::WINDOW_NORMAL);
+            // // cv::imshow("ts img1", event_img);
+            // cv::imshow("ts_color", ts_color);
+            // cv::waitKey(1);
+            // LOG(INFO)<<"2";
         }
     }
     

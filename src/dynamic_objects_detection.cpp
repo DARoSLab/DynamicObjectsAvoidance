@@ -79,8 +79,7 @@ bool DynamicObjectsAvoidance::Step() {
     int font_size = 1;
     cv::Scalar font_Color(255, 255, 0);
     int font_weight = 1;
-    // int rCount = 0;
-    // int lCount = 0;
+
     // Frame::Ptr new_frame;
     // if (data_reader_) {
     //     new_frame = data_reader_->NextFrame();
@@ -138,23 +137,26 @@ bool DynamicObjectsAvoidance::Step() {
 
             // Calculate the direction of object
             if (pre_pos_.x - curr_pos.x > 0) {
+                xVel = - (pre_pos_.x - curr_pos.x);
+                yVel = - (pre_pos_.y - curr_pos.y);
                 rCount++;
                 lCount = 0;
             } else if (pre_pos_.x - curr_pos.x < 0) {
+                xVel = - (pre_pos_.x - curr_pos.x);
+                yVel = - (pre_pos_.y - curr_pos.y);
                 lCount++;
                 rCount = 0;
             }      
 
             if (rCount > Config::Get<int>("accumThreshold")) {
-                putText(ts_color, "Left (" + std::to_string(- (pre_pos_.x - curr_pos.x)) + ", " + std::to_string(- (pre_pos_.y - curr_pos.y)) + ")", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                putText(ts_color, "Left (" + std::to_string(xVel) + ", " + std::to_string(yVel) + ")", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
                 drawCount++;
                 if (drawCount > 20){
                     rCount = 0;
                     drawCount = 0;
                 }
-                
             } else if (lCount > Config::Get<int>("accumThreshold")) {
-                putText(ts_color, "Right (" + std::to_string(- (pre_pos_.x - curr_pos.x)) + ", " + std::to_string(- (pre_pos_.y - curr_pos.y))+ ")", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                putText(ts_color, "Right (" + std::to_string(xVel) + ", " + std::to_string(yVel)+ ")", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
                 drawCount++;
                 if (drawCount > 20){
                     lCount = 0;

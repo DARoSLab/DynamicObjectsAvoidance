@@ -53,10 +53,15 @@ class DynamicObjectsAvoidance {
     // dataset
     DataReader::Ptr data_reader_ = nullptr;
     int store_rgbd_;
+    int rCount = 0;
+    int lCount = 0;
+    int drawCount = 0;
 
     std::unique_ptr<TimeSurface> time_surface_ = nullptr;
     std::unique_ptr<TimeSurfaceAccumulator> time_surface_accumulator_ = nullptr;
     dv::EventStore slice_;
+
+
 
     cv::Point2i pre_pos_;
 

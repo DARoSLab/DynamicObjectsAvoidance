@@ -1,7 +1,11 @@
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(libzstd REQUIRED IMPORTED_TARGET libzstd)
+
+
 # run DynamicObjectsAvoidance
 add_executable(run_dynamic_objects_avoidance run_DynamicObjectsAvoidance.cpp)
-target_link_libraries(run_dynamic_objects_avoidance DynamicObjectsAvoidance ${THIRD_PARTY_LIBS})
+target_link_libraries(run_dynamic_objects_avoidance DynamicObjectsAvoidance ${THIRD_PARTY_LIBS} PkgConfig::libzstd)
 
 # Run control (testing)
-add_executable(walkTest run_control.cpp)
-target_link_libraries(walkTest DynamicObjectsAvoidance ${THIRD_PARTY_LIBS})
+# add_executable(walkTest run_control.cpp)
+# target_link_libraries(walkTest DynamicObjectsAvoidance ${THIRD_PARTY_LIBS})

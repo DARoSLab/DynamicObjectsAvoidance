@@ -18,7 +18,8 @@ add_definitions(-w) # do not show warning
 include_directories("/usr/include/eigen3")
 
 # OpenCV
-find_package(OpenCV 4.4 REQUIRED)
+# find_package(OpenCV 4.4 REQUIRED)
+find_package(OpenCV 4.2 REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Sophus

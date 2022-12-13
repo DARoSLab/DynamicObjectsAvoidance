@@ -30,7 +30,7 @@
 // Real sense camera headers
 #include <librealsense2/h/rs_sensor.h>
 #include <librealsense2/rs.hpp>
-#include "/home/zh/code/sensor_driver/librealsense-2.50.0/src/api.h"
+// #include "/home/zh/code/sensor_driver/librealsense-2.50.0/src/api.h"
 #include "omp.h"
 #include <boost/thread/pthread/recursive_mutex.hpp>
 

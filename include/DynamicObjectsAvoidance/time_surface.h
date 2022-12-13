@@ -4,7 +4,7 @@
 #include <deque>
 #include "DynamicObjectsAvoidance/config.h"
 #include "dv-processing/core/frame.hpp"
-#include<Eigen/Core>
+#include <Eigen/Core>
 #include <opencv2/core/eigen.hpp>
 
 namespace DynamicObjectsAvoidance {

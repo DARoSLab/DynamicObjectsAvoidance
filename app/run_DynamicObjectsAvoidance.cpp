@@ -5,6 +5,7 @@
 DEFINE_string(config_file, "../config/default.yaml", "config file path");
 
 int main(int argc, char **argv) {
+    // printf("OpenCV: %s", cv::getBuildInformation().c_str());
     google::ParseCommandLineFlags(&argc, &argv, true);
 
     DynamicObjectsAvoidance::DynamicObjectsAvoidance::Ptr DOA(

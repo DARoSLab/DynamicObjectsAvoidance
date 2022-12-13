@@ -18,15 +18,25 @@ visualize_alignment: 0
 # data
 # the tum dataset directory, change it to yours! 
 # dataset_dir: /media/xiang/Data/Dataset/Kitti/dataset/sequences/00
-kitti_stereo_dataset_path: /home/zh/data/kitti/data_odometry_gray/dataset/sequences/05
-rgbd_dataset_path: /home/zh/data/img
-timestamp_path: /home/zh/data/img/rgbd_timestamp.txt
+
+# Commented out
+# kitti_stereo_dataset_path: /home/zh/data/kitti/data_odometry_gray/dataset/sequences/05
+# rgbd_dataset_path: /home/zh/data/img
+# timestamp_path: /home/zh/data/img/rgbd_timestamp.txt
+# event_dataset_path: /home/zh/data/event/my_recording/2022-09-27 191356.aedat4
+
+
 # event_data_file_name: /2022-09-06 23_21_58
 # event_dataset_path: /home/zh/data/event/my_recording
-event_dataset_path: /home/zh/data/event/my_recording/2022-09-27 191356.aedat4
+
+
 # event_dataset_path: /home/zh/test.aedat4
 # config file directory
-cfg_file_path: /home/zh/code/DynamicObjectsAvoidance/config/default.yaml
+
+# rgbd_dataset_path: /home/hochul/Repository/DynamicObjectsAvoidance/data/input/rgbd
+# timestamp_path: /home/hochul/Repository/DynamicObjectsAvoidance/data/input/rgbd_timestamp.txt
+# event_dataset_path: home/hochul/Repository/DynamicObjectsAvoidance/data/input/test.aedat4
+cfg_file_path: /home/hochul/Repository/DynamicObjectsAvoidance/config/default.yaml
 
 # camera intrinsics
 camera.fx: 517.3
@@ -136,3 +146,5 @@ background_activity_time: 2000
 enable_noise_filter: 1
 time_increment: 1000
 decay_ms: 1
+
+accumThreshold: 3

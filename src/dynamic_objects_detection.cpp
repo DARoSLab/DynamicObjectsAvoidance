@@ -139,24 +139,26 @@ bool DynamicObjectsAvoidance::Step() {
             if (pre_pos_.x - curr_pos.x > 0) {
                 xVel = - (pre_pos_.x - curr_pos.x);
                 yVel = - (pre_pos_.y - curr_pos.y);
+                angle = atan (yVel/xVel) * 180 / PI;
                 rCount++;
                 lCount = 0;
             } else if (pre_pos_.x - curr_pos.x < 0) {
                 xVel = - (pre_pos_.x - curr_pos.x);
                 yVel = - (pre_pos_.y - curr_pos.y);
+                angle = atan (yVel/xVel) * 180 / PI;
                 lCount++;
                 rCount = 0;
             }      
 
             if (rCount > Config::Get<int>("accumThreshold")) {
-                putText(ts_color, "Left (" + std::to_string(xVel) + ", " + std::to_string(yVel) + ")", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                putText(ts_color, "Left (" + std::to_string(xVel) + ", " + std::to_string(yVel) + ")" + std::to_string(angle), text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
                 drawCount++;
                 if (drawCount > 20){
                     rCount = 0;
                     drawCount = 0;
                 }
             } else if (lCount > Config::Get<int>("accumThreshold")) {
-                putText(ts_color, "Right (" + std::to_string(xVel) + ", " + std::to_string(yVel)+ ")", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                putText(ts_color, "Right (" + std::to_string(xVel) + ", " + std::to_string(yVel)+ ")" + std::to_string(angle), text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
                 drawCount++;
                 if (drawCount > 20){
                     lCount = 0;

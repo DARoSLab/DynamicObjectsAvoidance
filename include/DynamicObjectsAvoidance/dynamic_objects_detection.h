@@ -12,6 +12,9 @@
 #include <dv-processing/core/frame.hpp>
 #include <dv-processing/io/camera_capture.hpp>
 
+#define PI 3.14159265
+
+
 namespace DynamicObjectsAvoidance {
 
 /**
@@ -58,6 +61,8 @@ class DynamicObjectsAvoidance {
     int xVel = 0;
     int yVel = 0;
     int drawCount = 0;
+    double angle;
+
 
     std::unique_ptr<TimeSurface> time_surface_ = nullptr;
     std::unique_ptr<TimeSurfaceAccumulator> time_surface_accumulator_ = nullptr;

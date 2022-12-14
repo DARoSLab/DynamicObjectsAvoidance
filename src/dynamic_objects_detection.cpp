@@ -76,7 +76,7 @@ bool DynamicObjectsAvoidance::Step() {
     auto t3 = std::chrono::steady_clock::now();
     // Drawing
     cv::Point text_position(15, 30);
-    int font_size = 1;
+    double font_size = 0.5;
     cv::Scalar font_Color(255, 255, 0);
     int font_weight = 1;
 
@@ -151,14 +151,14 @@ bool DynamicObjectsAvoidance::Step() {
             }      
 
             if (rCount > Config::Get<int>("accumThreshold")) {
-                putText(ts_color, "Left (" + std::to_string(xVel) + ", " + std::to_string(yVel) + ")" + std::to_string(angle), text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                putText(ts_color, "Left (" + std::to_string(int(xVel)) + ", " + std::to_string(int(yVel)) + ") " + std::to_string(angle), text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
                 drawCount++;
                 if (drawCount > 20){
                     rCount = 0;
                     drawCount = 0;
                 }
             } else if (lCount > Config::Get<int>("accumThreshold")) {
-                putText(ts_color, "Right (" + std::to_string(xVel) + ", " + std::to_string(yVel)+ ")" + std::to_string(angle), text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                putText(ts_color, "Right (" + std::to_string(int(xVel)) + ", " + std::to_string(int(yVel))+ ") " + std::to_string(angle), text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
                 drawCount++;
                 if (drawCount > 20){
                     lCount = 0;
@@ -176,7 +176,7 @@ bool DynamicObjectsAvoidance::Step() {
             saving_cnt++;
 
             // // cv::namedWindow("ts img1", cv::WINDOW_NORMAL);
-            // cv::namedWindow("ts_color", cv::WINDOW_NORMAL);
+            // cv::namedWindow("Dynamic obstacle avoidance project", cv::WINDOW_NORMAL);
             // // cv::imshow("ts img1", event_img);
             cv::imshow("ts_color", ts_color);
             cv::waitKey(1);

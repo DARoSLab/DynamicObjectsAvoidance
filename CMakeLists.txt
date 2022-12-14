@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
 project(DynamicObjectsAvoidance)
 
+cmake_policy(SET CMP0063 NEW)
+
 set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_CXX_FLAGS "-std=c++14 -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE  "-std=c++14 -O3 -fopenmp -pthread")
+
+set(Boost_NO_WARN_NEW_VERSIONS 1)
 # set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl") # already linked below
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
@@ -52,7 +56,8 @@ include_directories(${CSPARSE_INCLUDE_DIR})
 find_package(fmt REQUIRED)
 
 # # dv-processing
-find_package(dv-processing 1.5.1 REQUIRED)
+# find_package(dv-processing 1.5.1 REQUIRED)
+find_dependency(dv-processing 1.5.1 REQUIRED)
 include_directories("/opt/inivation/boost/include")
 include_directories("/usr/include")
 
@@ -81,6 +86,8 @@ set(THIRD_PARTY_LIBS
         ${realsense2_LIBRARY}
         libcaer::caer
         /usr/lib/x86_64-linux-gnu/libdl.so
+        ${PROJECT_SOURCE_DIR}/lib/libunitree_legged_sdk_amd64.so
+        lcm
         )
 
 # Control (tested)

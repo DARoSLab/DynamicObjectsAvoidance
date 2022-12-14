@@ -58,8 +58,8 @@ class DynamicObjectsAvoidance {
     int store_rgbd_;
     int rCount = 0;
     int lCount = 0;
-    int xVel = 0;
-    int yVel = 0;
+    double xVel = 0;
+    double yVel = 0;
     int drawCount = 0;
     double angle;
 

@@ -11,7 +11,7 @@
 #include "loop.h"
 #include "lcm.h"
 #include "quadruped.h"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #define UT UNITREE_LEGGED_SDK    //short name
 

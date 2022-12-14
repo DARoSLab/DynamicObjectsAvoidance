@@ -2,6 +2,7 @@
 #include <chrono>
 #include "DynamicObjectsAvoidance/config.h"
 
+
 namespace DynamicObjectsAvoidance {
 
 DynamicObjectsAvoidance::DynamicObjectsAvoidance(std::string &config_path)
@@ -59,6 +60,7 @@ bool DynamicObjectsAvoidance::Init() {
 }
 
 void DynamicObjectsAvoidance::Run() {
+    // InitCtrl();
     while (1) {
         // LOG(INFO) << "Dynamic Objects Avoidance is running";
         if (Step() == false) {
@@ -87,10 +89,10 @@ bool DynamicObjectsAvoidance::Step() {
     // }
     if (events_->getHighestTime() > 0) {
         slice_ = events_->sliceTime(events_->getHighestTime()-2000, events_->getHighestTime()-1);//.sliceBack(2000);
-        LOG(INFO)<<"event highest time = "<<events_->getHighestTime();
-        LOG(INFO)<<"events_->back() = "<<events_->back().timestamp();
+        // LOG(INFO)<<"event highest time = "<<events_->getHighestTime();
+        // LOG(INFO)<<"events_->back() = "<<events_->back().timestamp();
         auto len = slice_.size();
-        LOG(INFO)<<"event size = "<<len;
+        // LOG(INFO)<<"event size = "<<len;
 
         if (len > 10) {
 
@@ -110,7 +112,7 @@ bool DynamicObjectsAvoidance::Step() {
             // cv::imshow("event_img", event_img);
             // cv::imshow("img_med", img_med);
             // cv::waitKey(1);
-            LOG(INFO)<<"img type = "<<img_med.type();
+            // LOG(INFO)<<"img type = "<<img_med.type();
 
             for (int v = 0; v < 240; v++) {
 				for (int u = 0; u < 320; u++) {
@@ -169,10 +171,12 @@ bool DynamicObjectsAvoidance::Step() {
             pre_pos_ = curr_pos;
 
             static uint64_t saving_cnt(0);
-            LOG(INFO)<<"0";
+            
+            // Save image
             // cv::imwrite("/home/zh/data/dyn_detection/"+std::to_string(saving_cnt)+".png", ts_color);
-            cv::imwrite("/home/hochul/Repository/DynamicObjectsAvoidance/data/output/"+std::to_string(saving_cnt)+".png", ts_color);
-            LOG(INFO)<<"1";
+            // cv::imwrite("/home/hochul/Repository/DynamicObjectsAvoidance/data/output/"+std::to_string(saving_cnt)+".png", ts_color);
+
+            // LOG(INFO)<<"1";
             saving_cnt++;
 
             // // cv::namedWindow("ts img1", cv::WINDOW_NORMAL);

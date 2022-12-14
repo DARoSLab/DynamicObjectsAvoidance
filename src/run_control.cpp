@@ -144,26 +144,26 @@ void Custom::RobotControl()
 }
 
 
-int main(void) 
-{
-    std::cout << "Communication level is set to HIGH-level." << std::endl
-              << "WARNING: Make sure the robot is standing on the ground." << std::endl
-              << "Press Enter to continue..." << std::endl;
-    std::cin.ignore();
+// int main(void) 
+// {
+//     std::cout << "Communication level is set to HIGH-level." << std::endl
+//               << "WARNING: Make sure the robot is standing on the ground." << std::endl
+//               << "Press Enter to continue..." << std::endl;
+//     std::cin.ignore();
 
-    Custom custom(HIGHLEVEL);
-    // InitEnvironment();
-    LoopFunc loop_control("control_loop", custom.dt,    boost::bind(&Custom::RobotControl, &custom));
-    LoopFunc loop_udpSend("udp_send",     custom.dt, 3, boost::bind(&Custom::UDPSend,      &custom));
-    LoopFunc loop_udpRecv("udp_recv",     custom.dt, 3, boost::bind(&Custom::UDPRecv,      &custom));
+//     Custom custom(HIGHLEVEL);
+//     // InitEnvironment();
+//     LoopFunc loop_control("control_loop", custom.dt,    boost::bind(&Custom::RobotControl, &custom));
+//     LoopFunc loop_udpSend("udp_send",     custom.dt, 3, boost::bind(&Custom::UDPSend,      &custom));
+//     LoopFunc loop_udpRecv("udp_recv",     custom.dt, 3, boost::bind(&Custom::UDPRecv,      &custom));
 
-    loop_udpSend.start();
-    loop_udpRecv.start();
-    loop_control.start();
+//     loop_udpSend.start();
+//     loop_udpRecv.start();
+//     loop_control.start();
 
-    while(1){
-        sleep(10);
-    };
+//     while(1){
+//         sleep(10);
+//     };
 
-    return 0; 
-}
+//     return 0; 
+// }

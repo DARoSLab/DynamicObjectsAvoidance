@@ -12,6 +12,9 @@
 #include <dv-processing/core/frame.hpp>
 #include <dv-processing/io/camera_capture.hpp>
 
+// ctrl header
+#include "DynamicObjectsAvoidance/run_control.h"
+
 #define PI 3.14159265
 
 
@@ -63,12 +66,11 @@ class DynamicObjectsAvoidance {
     int drawCount = 0;
     double angle;
 
+    // Custom summer;
 
     std::unique_ptr<TimeSurface> time_surface_ = nullptr;
     std::unique_ptr<TimeSurfaceAccumulator> time_surface_accumulator_ = nullptr;
     dv::EventStore slice_;
-
-
 
     cv::Point2i pre_pos_;
 

@@ -72,3 +72,8 @@ sudo make
 # copy or symlink libgtest.a and libgtest_main.a to your /usr/lib folder
 sudo cp *.a /usr/lib
 ```
+
+## Build in conda environment & suppress warnings
+```
+PISM_INSTALL_PREFIX=~/pism PATH=$NOCONDA_PATH cmake .. -Wno-dev
+```

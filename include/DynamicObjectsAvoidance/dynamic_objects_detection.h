@@ -1,6 +1,4 @@
 #pragma once
-// #ifndef DynamicObjectsAvoidance_dynamic_objects_detection.h_H
-// #define DynamicObjectsAvoidance_dynamic_objects_detection.h_H
 
 #include "DynamicObjectsAvoidance/common_include.h"
 #include "DynamicObjectsAvoidance/data_reader.h"
@@ -75,8 +73,7 @@ namespace DynamicObjectsAvoidance {
         // dataset
         DataReader::Ptr data_reader_ = nullptr;
         int store_rgbd_;
-        int rCount = 0;
-        int lCount = 0;
+
         double xVel = 0;
         double yVel = 0;
         double cmdDir = .0f;
@@ -84,6 +81,7 @@ namespace DynamicObjectsAvoidance {
         int tmpDirection;
         int majorDirection;
         int groundX;
+        int topX;
 
         // double angle;
         // int drawCount = 0;

@@ -65,12 +65,12 @@ void DynamicObjectsAvoidance::Run() {
 bool DynamicObjectsAvoidance::Step() {
 
     auto t3 = std::chrono::steady_clock::now();
-    // std::cout << "TIme: " << t3 << "\n";
+    
     // Drawing
     cv::Point text_position(15, 30);
-    double font_size = 0.5;
+    double font_size(0.5);
     cv::Scalar font_Color(0, 255, 255);
-    int font_weight = 1;
+    int font_weight(1);
 
     if (events_->getHighestTime() > 0) {
 
@@ -127,16 +127,12 @@ bool DynamicObjectsAvoidance::Step() {
 
                 // Quadrant-wise pixel velocity
                 if (xVel > 0) {
-                    rCount++;
-                    lCount = 0;
                     if (yVel > 0) { // 2nd quadrant
                         tmpDirection = 2;
                     } else { // 3rd quadrant
                         tmpDirection = 3;
                     }
                 } else if (xVel < 0) { 
-                    lCount++;
-                    rCount = 0;
                     if (yVel > 0) { // 1st quadrant
                         tmpDirection = 1;
                     } else { // 4th quadrant
@@ -167,13 +163,25 @@ bool DynamicObjectsAvoidance::Step() {
                         cv::arrowedLine(ts_color, curr_pos, curr_pos+direction, cv::Scalar(0, 255, 0), 2);
                         
                         // // Trajectory prediction
-                        if (yVel < 0 && int(direction.x) != 0 && int(direction.y) != 0) {
-                            double inclination = double(direction.y)/double(direction.x);
-
-                            // Pedicted ground collision (x, 240) -> pixel frame
-                            groundX = int((240-curr_pos.y)/inclination+curr_pos.x);
-                            auto extendedDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
-                            cv::arrowedLine(ts_color, curr_pos, extendedDirection, cv::Scalar(255, 255, 0), 1);    
+                        if (int(direction.x) != 0 && int(direction.y) != 0) {
+                            // Faling obstacle
+                            if (yVel < 0){
+                                double inclination = double(direction.y)/double(direction.x);
+                                // Pedicted ground collision (x, 240) -> pixel frame
+                                groundX = int((240-curr_pos.y)/inclination+curr_pos.x);
+                                auto extendedDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
+                                cv::arrowedLine(ts_color, curr_pos, extendedDirection, cv::Scalar(255, 255, 0), 1);    
+                            // Rising obstacle
+                            } else if (yVel > 0){
+                                double inclination = double(direction.y)/double(direction.x);
+                                // Pedicted ground collision (x, 240) -> pixel frame
+                                topX = int((-curr_pos.y/inclination)+curr_pos.x);
+                                groundX = int(-240/inclination+topX);
+                                auto extendedTopDirection = cv::Point(topX, 0); // y = -a(x-X)-Y
+                                auto extendedBottomDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
+                                cv::line(ts_color, curr_pos, extendedTopDirection, cv::Scalar(255, 255, 0), 1);  
+                                cv::arrowedLine(ts_color, extendedTopDirection, extendedBottomDirection, cv::Scalar(255, 255, 0), 1);    
+                            }
 
                             // Define collision w/ robot
                             if (160 - (int) Config::Get<int>("robotRadius") < groundX && 160 + (int) Config::Get<int>("robotRadius") > groundX) {

@@ -12,8 +12,10 @@
 #include <dv-processing/core/frame.hpp>
 #include <dv-processing/io/camera_capture.hpp>
 
+// #include "DynamicObjectsAvoidance/unitree_legged_sdk.h"
+
 // ctrl header
-#include "DynamicObjectsAvoidance/run_control.h"
+// #include "DynamicObjectsAvoidance/run_control.h"
 
 #define PI 3.14159265
 
@@ -38,6 +40,11 @@ class DynamicObjectsAvoidance {
     bool Init();
 
     /**
+     * init system control
+     */
+    // void InitCtrl();
+
+    /**
      * start vo in the dataset
      */
     void Run();
@@ -51,7 +58,14 @@ class DynamicObjectsAvoidance {
         events_ = events;
     }
 
-   private:
+    double GetXVel() {
+        return xVel;
+    }
+    double GetYVel() {
+        return yVel;
+    }
+
+   protected:
     bool inited_ = false;
     std::string config_file_path_;
     dv::EventStore* events_ = nullptr;
@@ -63,8 +77,9 @@ class DynamicObjectsAvoidance {
     int lCount = 0;
     double xVel = 0;
     double yVel = 0;
-    int drawCount = 0;
     double angle;
+    int drawCount = 0;
+
 
     // Custom summer;
 
@@ -78,3 +93,45 @@ class DynamicObjectsAvoidance {
 }  // namespace DynamicObjectsAvoidance
 
 // #endif  // DynamicObjectsAvoidance_dynamic_objects_detection.h_H
+
+
+
+// using namespace UNITREE_LEGGED_SDK;
+
+// namespace Avoid_behavior {
+//   constexpr int FACE_RIGHT = 0;
+//   constexpr int FACE_LEFT = 1;
+//   constexpr int FACE_UP = 2;
+//   constexpr int FACE_DOWN = 3;
+//   constexpr int BODY_UP = 4;
+//   constexpr int BODY_DOWN = 5;
+//   constexpr int INITIAL = 6;
+// };
+
+// class Custom
+// {
+// public:
+//     Custom(uint8_t level): 
+//       safe(LeggedType::Go1), 
+//        udp(8090, "192.168.12.1", 8082, sizeof(HighCmd), sizeof(HighState)) // WIFI  
+//       //  udp(8090, "192.168.123.161", 8082, sizeof(HighCmd), sizeof(HighState)) // WIRED
+//     {
+//         udp.InitCmdData(cmd);
+//     }
+//     void UDPRecv();
+//     void UDPSend();
+//     void RobotControl();
+
+//     Safety safe;
+//     UDP udp;
+//     HighCmd cmd = {0};
+//     HighState state = {0};
+//     int motiontime = 0;
+//     float dt = 0.002;  // 0.001~0.01
+//     int avoid_mode = 0;
+// private:
+//     // double obsXvel = xVel;
+//     // double obsYvel = yVel;
+//     // double obsAngle = angle;
+// };
+

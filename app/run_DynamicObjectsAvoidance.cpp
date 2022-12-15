@@ -1,6 +1,7 @@
 #include <gflags/gflags.h>
 // #include <DynamicObjectsAvoidance/common_include.h>
 #include "DynamicObjectsAvoidance/dynamic_objects_detection.h"
+#include "DynamicObjectsAvoidance/run_control.h"
 
 DEFINE_string(config_file, "../config/default.yaml", "config file path");
 
@@ -12,12 +13,14 @@ int main(int argc, char **argv) {
         new DynamicObjectsAvoidance::DynamicObjectsAvoidance(FLAGS_config_file));
     assert(DOA->Init() == true);
 
-    std::cout << "Communication level is set to HIGH-level." << std::endl
-              << "WARNING: Make sure the robot is standing on the ground." << std::endl
-              << "Press Enter to continue..." << std::endl;
-    std::cin.ignore();
+    std::cout << "[HIGH-LEVEL] Communication" << std::endl
+            << "WARNING: Make sure the robot is standing on the ground." << std::endl
+            << "Press Enter to continue..." << std::endl;
+    
+    // Add for safety check
+    // std::cin.ignore();
 
-    Custom custom(HIGHLEVEL);
+    Custom custom(HIGHLEVEL, DOA);
     // InitEnvironment();
     LoopFunc loop_control("control_loop", custom.dt,    boost::bind(&Custom::RobotControl, &custom));
     LoopFunc loop_udpSend("udp_send",     custom.dt, 3, boost::bind(&Custom::UDPSend,      &custom));
@@ -26,7 +29,7 @@ int main(int argc, char **argv) {
     loop_udpSend.start();
     loop_udpRecv.start();
     loop_control.start();
-    
+
     DOA->Run();
 
     LOG(INFO)<<"Hello Dynamic Objects Avoidance";

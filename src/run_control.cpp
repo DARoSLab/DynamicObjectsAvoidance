@@ -16,12 +16,27 @@ void Custom::RobotControl()
     udp.GetRecv(state);
     
     // Get pixel velocity from event
-    obsXvel = int(event->GetXVel());
-    obsYvel = int(event->GetYVel());
+    // obsXvel = int(event->GetXVel());
+    // obsYvel = int(event->GetYVel());
+
+    // Get direction command
+    robotDir = event->GetCmdDir(); 
+
+    // Get window velocity direction
+    // if (obsXvel < 0 && obsYvel > 0) {
+    //     windowVelDir = 0;
+    // } else if (obsXvel > 0 && obsYvel > 0) {
+    //     windowVelDir = 1;
+    // } else if (obsXvel > 0 && obsYvel < 0) {
+    //     windowVelDir = 2;
+    // } else if (obsXvel < 0 && obsYvel < 0) {
+    //     windowVelDir = 3;
+    // }
 
     // Debug prints
     // printf("[%d]  EVENT (X,Y) VEL: (%d, %d)\n", motiontime, obsXvel, obsYvel);
-    printf("[%d]\n", avoid_mode);
+    // printf("[%d]\n", avoid_mode);
+    // printf("EVENT (X,Y) VEL: (%d, %d) WINDOW VEL DIR: %d", obsXvel, obsYvel, windowVelDir);
     // printf("%f %f %f %f %f\n", state.imu.rpy[1], state.imu.rpy[2], state.position[0], state.position[1], state.velocity[0]);
     // printf("%f %f %f\n", state.motorState[3].q, state.motorState[4].q, state.motorState[5].q);
 
@@ -39,6 +54,7 @@ void Custom::RobotControl()
     cmd.yawSpeed = 0.0f;
 
     // Need this for now to operate
+    /*
     if(motiontime > 1000 && motiontime < 2000){
         cmd.mode = 5;
     } else if(motiontime > 3000 && motiontime < 4000){
@@ -83,7 +99,9 @@ void Custom::RobotControl()
             firstMotion = false;
             targetTime = 0;
         }
+        
     }
+    */
 
     udp.SetSend(cmd);
 }

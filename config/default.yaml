@@ -148,3 +148,7 @@ time_increment: 1000
 decay_ms: 1
 
 accumThreshold: 3
+accumTime: 500
+windowSize: 7
+eventCount: 50
+robotRadius: 30

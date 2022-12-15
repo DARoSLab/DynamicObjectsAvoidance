@@ -40,22 +40,22 @@ public:
     void RobotControl();
 
     DynamicObjectsAvoidance::DynamicObjectsAvoidance::Ptr event;
-    // double xVel = dta->xVel;
 
     Safety safe;
     UDP udp;
     HighCmd cmd = {0};
     HighState state = {0};
+
+    // const int windowSize = 5;
     int motiontime = 0;
     int targetTime = 0;
     float dt = 0.002;  // 0.001~0.01
     int avoid_mode;
     bool firstMotion = false;
-    const int windowSize = 5;
     
 protected:
-    int obsXvel;
-    int obsYvel;
-// private:
-//     double xVel = doa->xVel;
+    // int obsXvel;
+    // int obsYvel;
+    double robotDir = 0; // y velocity
+
 };

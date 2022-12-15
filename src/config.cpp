@@ -17,10 +17,7 @@ bool Config::SetParameterFile(const std::string &filename) {
 
 Config::~Config() {
     if (file_.isOpened()){
-        printf("H1\n");
         file_.release();
-        printf("H2\n");
-
     }
 }
 

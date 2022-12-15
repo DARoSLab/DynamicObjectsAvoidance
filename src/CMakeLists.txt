@@ -8,7 +8,7 @@ add_library(DynamicObjectsAvoidance
         data_reader.cpp
         frame.cpp
         time_surface.cpp
-        run_control.cpp
+        control.cpp
         dynamic_objects_detection.cpp)
 
 target_link_libraries(DynamicObjectsAvoidance

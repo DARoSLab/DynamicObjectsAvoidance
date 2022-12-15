@@ -1,7 +1,6 @@
 #include <gflags/gflags.h>
-// #include <DynamicObjectsAvoidance/common_include.h>
 #include "DynamicObjectsAvoidance/dynamic_objects_detection.h"
-#include "DynamicObjectsAvoidance/run_control.h"
+#include "DynamicObjectsAvoidance/control.h"
 
 DEFINE_string(config_file, "../config/default.yaml", "config file path");
 
@@ -17,7 +16,7 @@ int main(int argc, char **argv) {
             << "WARNING: Make sure the robot is standing on the ground." << std::endl
             << "Press Enter to continue..." << std::endl;
     
-    // Add for safety check
+    // Safety run
     // std::cin.ignore();
 
     Custom custom(HIGHLEVEL, DOA);

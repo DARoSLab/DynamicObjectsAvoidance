@@ -67,6 +67,7 @@ namespace DynamicObjectsAvoidance {
 
     protected:
         bool inited_ = false;
+        int motionCnt = 0;
         bool collision = false;
         std::string config_file_path_;
         dv::EventStore* events_ = nullptr;
@@ -78,15 +79,18 @@ namespace DynamicObjectsAvoidance {
         int lCount = 0;
         double xVel = 0;
         double yVel = 0;
-        double angle;
-        double cmdDir;
-        int drawCount = 0;
-        int groundX;;
-        FixedQueue<int, 7> dirQueue; // Queue to store the last 5 directions
-        std::vector<int> dirCounts{std::vector<int>(5, 0)}; // Store the number of times for each direction (default 0)
+        double cmdDir = .0f;
+
         int tmpDirection;
         int majorDirection;
+        int groundX;
 
+        // double angle;
+        // int drawCount = 0;
+        
+        FixedQueue<int, 7> dirQueue; // Queue to store the last 5 directions
+        std::vector<int> dirCounts{std::vector<int>(5, 0)}; // Store the number of times for each direction (default 0)
+        
         std::unique_ptr<TimeSurface> time_surface_ = nullptr;
         std::unique_ptr<TimeSurfaceAccumulator> time_surface_accumulator_ = nullptr;
         dv::EventStore slice_;

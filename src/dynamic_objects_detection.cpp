@@ -65,7 +65,7 @@ void DynamicObjectsAvoidance::Run() {
 bool DynamicObjectsAvoidance::Step() {
 
     auto t3 = std::chrono::steady_clock::now();
-
+    // std::cout << "TIme: " << t3 << "\n";
     // Drawing
     cv::Point text_position(15, 30);
     double font_size = 0.5;
@@ -120,12 +120,12 @@ bool DynamicObjectsAvoidance::Step() {
 
                 cv::line(ts_color, cv::Point(160-(int) Config::Get<int>("robotRadius"), 240), cv::Point(160+(int) Config::Get<int>("robotRadius"), 240), cv::Scalar(0, 0, 255), 4);
 
-                
                 // Pixel-wise velocity
                 xVel = pre_pos_.x - curr_pos.x;
                 yVel = pre_pos_.y - curr_pos.y;
-                angle = atan (yVel/xVel) * 180 / PI;
+                // angle = atan (yVel/xVel) * 180 / PI;
 
+                // Quadrant-wise pixel velocity
                 if (xVel > 0) {
                     rCount++;
                     lCount = 0;
@@ -183,15 +183,17 @@ bool DynamicObjectsAvoidance::Step() {
                             }
 
                             // Compare collision & send final command
-                            if (collision && groundX > 160) {
-                                cmdDir = -0.2f; // robot left command
-                                printf("\nGO Left\n");
+                            if (collision && groundX > 160 && inited_ == false) {
+                                inited_ = true;
+                                cmdDir = -0.3f; // robot left command
+                                printf("\nHit from right -> GO Left\n");
                                 printf("%f\n", cmdDir);
                                 putText(ts_color, "Collision! CMD Left", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
 
-                            } else if (collision && groundX < 160) {
-                                cmdDir = 0.2f; // robot right command
-                                printf("\nGO Right\n");
+                            } else if (collision && groundX < 160 && inited_ == false) {
+                                inited_ = true;
+                                cmdDir = 0.3f; // robot right command
+                                printf("\nHIt from left -> GO Right\n");
                                 printf("%f\n", cmdDir);
                                 putText(ts_color, "Collision! CMD Right", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
                             }
@@ -205,7 +207,7 @@ bool DynamicObjectsAvoidance::Step() {
             } else { // No events
                 xVel = 0;
                 yVel = 0;
-                angle = 0;
+                // angle = 0;
             }
             
             // Drawing for demo
@@ -237,6 +239,18 @@ bool DynamicObjectsAvoidance::Step() {
             // cv::namedWindow("Dynamic obstacle avoidance project", cv::WINDOW_NORMAL);
             // // cv::imshow("ts img1", event_img);
 
+        }
+
+        // If avoidance motion is triggered
+        if (inited_ == true){
+            motionCnt++;
+            // End motion
+            if (motionCnt > 1000000) {
+                inited_ = false;
+                motionCnt = 0;
+                cmdDir = 0.0f;
+                printf("\nMotion ended\n");
+            }
         }
     }
     

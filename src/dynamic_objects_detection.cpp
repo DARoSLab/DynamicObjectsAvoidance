@@ -9,6 +9,9 @@ DynamicObjectsAvoidance::DynamicObjectsAvoidance(std::string &config_path)
     time_surface_ = std::make_unique<TimeSurface>(config_path,
                                 320, 240, 1);
     time_surface_accumulator_ = std::make_unique<TimeSurfaceAccumulator>(cv::Size(320, 240));
+    imshowthread_ = std::thread(&DynamicObjectsAvoidance::ImshowThread, this);
+
+
 }
 
 bool DynamicObjectsAvoidance::Init() {
@@ -62,9 +65,24 @@ void DynamicObjectsAvoidance::Run() {
     LOG(INFO) << "Dynamic Objects Avoidance Exit";
 }
 
+void DynamicObjectsAvoidance::ImshowThread() {
+
+    cv::Mat event_img = cv::Mat::zeros(240, 320, CV_8UC1);
+    while (1) {
+        {
+            cv::imshow("event_img", event_img);
+            key = cv::waitKey(1);
+        }
+    }
+}
+
+cv::Mat DynamicObjectsAvoidance::GetImage() {
+    return frame;
+}
+
 bool DynamicObjectsAvoidance::Step() {
 
-    auto t3 = std::chrono::steady_clock::now();
+    // auto t3 = std::chrono::steady_clock::now();
     
     // Drawing
     cv::Point text_position(15, 30);
@@ -77,8 +95,13 @@ bool DynamicObjectsAvoidance::Step() {
         slice_ = events_->sliceTime(events_->getHighestTime()-((int) Config::Get<int>("accumTime")), events_->getHighestTime()-1);//.sliceBack(2000);
         auto len = slice_.size();
         // LOG(INFO)<<"event size = "<<len;
+        // initAction = false;
 
-        if (len > (int) Config::Get<int>("eventCount")) {
+
+        
+
+        if (len > (int) Config::Get<int>("eventCount") && key == 32) {
+            // initAction = false;
             cv::Mat event_img = cv::Mat::zeros(240, 320, CV_8UC1);
             auto e = events_->back();
             // time_surface_->accept(slice_);
@@ -91,7 +114,7 @@ bool DynamicObjectsAvoidance::Step() {
                 event_img.ptr<uchar>(slice_.at(it).y())[slice_.at(it).x()] = 255;
             }
             cv::Mat img_med;
-            cv::medianBlur(event_img, img_med, 5); // 3
+            cv::medianBlur(event_img, img_med, 3); // 3
             // cv::imshow("event_img", event_img);
             // cv::imshow("img_med", img_med);
             // cv::waitKey(1);
@@ -172,16 +195,17 @@ bool DynamicObjectsAvoidance::Step() {
                                 auto extendedDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
                                 cv::arrowedLine(ts_color, curr_pos, extendedDirection, cv::Scalar(255, 255, 0), 1);    
                             // Rising obstacle
-                            } else if (yVel > 0){
-                                double inclination = double(direction.y)/double(direction.x);
-                                // Pedicted ground collision (x, 240) -> pixel frame
-                                topX = int((-curr_pos.y/inclination)+curr_pos.x);
-                                groundX = int(-240/inclination+topX);
-                                auto extendedTopDirection = cv::Point(topX, 0); // y = -a(x-X)-Y
-                                auto extendedBottomDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
-                                cv::line(ts_color, curr_pos, extendedTopDirection, cv::Scalar(255, 255, 0), 1);  
-                                cv::arrowedLine(ts_color, extendedTopDirection, extendedBottomDirection, cv::Scalar(255, 255, 0), 1);    
-                            }
+                            } 
+                            // else if (yVel > 0){
+                            //     double inclination = double(direction.y)/double(direction.x);
+                            //     // Pedicted ground collision (x, 240) -> pixel frame
+                            //     topX = int((-curr_pos.y/inclination)+curr_pos.x);
+                            //     groundX = int(-240/inclination+topX);
+                            //     auto extendedTopDirection = cv::Point(topX, 0); // y = -a(x-X)-Y
+                            //     auto extendedBottomDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
+                            //     cv::line(ts_color, curr_pos, extendedTopDirection, cv::Scalar(255, 255, 0), 1);  
+                            //     cv::arrowedLine(ts_color, extendedTopDirection, extendedBottomDirection, cv::Scalar(255, 255, 0), 1);    
+                            // }
 
                             // Define collision w/ robot
                             if (160 - (int) Config::Get<int>("robotRadius") < groundX && 160 + (int) Config::Get<int>("robotRadius") > groundX) {
@@ -191,30 +215,45 @@ bool DynamicObjectsAvoidance::Step() {
                             }
 
                             // Compare collision & send final command
-                            if (collision && groundX > 160 && inited_ == false) {
-                                inited_ = true;
-                                cmdDir = -0.3f; // robot left command
+                            // if (collision && groundX > 160 && initAction == false) {
+                            if (collision && xVel >0 && initAction == false) {
+                                // inited_ = true;
+                                cmdDir = 0.7f; // robot left command
+                                initAction = true;
                                 printf("\nHit from right -> GO Left\n");
-                                printf("%f\n", cmdDir);
-                                putText(ts_color, "Collision! CMD Left", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                                frame = ts_color;
+                                // cv::Mat GetImage(ts_color);
+                                // printf("%f\n", cmdDir);
+                                // putText(ts_color, "Collision! CMD Left", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
 
-                            } else if (collision && groundX < 160 && inited_ == false) {
-                                inited_ = true;
-                                cmdDir = 0.3f; // robot right command
+                            // } else if (collision && groundX < 160 && initAction == false) {
+                            } else if (collision && xVel < 0 && initAction == false) {                                
+                                // inited_ = true;
+                                cmdDir = -0.7f; // robot right command
+                                initAction = true;
                                 printf("\nHIt from left -> GO Right\n");
-                                printf("%f\n", cmdDir);
-                                putText(ts_color, "Collision! CMD Right", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
-                            }
+                                frame = ts_color;
+                                cv::Mat GetImage(ts_color);
+
+                                // printf("%f\n", cmdDir);
+                                // putText(ts_color, "Collision! CMD Right", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                            } 
+                            
+                            // initAction = false;
                         }
+
                     }
+
                     pre_pos_ = curr_pos;
 
-                    cv::imshow("ts_color", ts_color);
-                    cv::waitKey(1);         
+                    // cv::imshow("ts_color", ts_color);
+                    // cv::waitKey(1);         
                 }    
             } else { // No events
                 xVel = 0;
                 yVel = 0;
+                    // initAction = false;
+
                 // angle = 0;
             }
             
@@ -250,16 +289,21 @@ bool DynamicObjectsAvoidance::Step() {
         }
 
         // If avoidance motion is triggered
-        if (inited_ == true){
+        if (initAction == true){
             motionCnt++;
+            // printf("motionCnt: %d", motionCnt);
+            // printf("cnt: %d", motionCnt);
+            // printf("Motion Count: %d\n", motionCnt);
             // End motion
-            if (motionCnt > 1000000) {
-                inited_ = false;
+            if (motionCnt > 1000) {
+                initAction = false;
                 motionCnt = 0;
                 cmdDir = 0.0f;
-                printf("\nMotion ended\n");
+                // printf("\nMotion ended\n");
             }
         }
+        // initAction = false;
+
     }
     
     return true;

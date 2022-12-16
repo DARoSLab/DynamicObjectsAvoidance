@@ -62,6 +62,11 @@ namespace DynamicObjectsAvoidance {
         double GetCmdDir(){
             return cmdDir; 
         }
+        bool GetInitAct(){
+            return initAction; 
+        }
+        cv::Mat GetImage();
+        
 
     protected:
         bool inited_ = false;
@@ -77,14 +82,15 @@ namespace DynamicObjectsAvoidance {
         double xVel = 0;
         double yVel = 0;
         double cmdDir = .0f;
+        bool initAction = false;
 
         int tmpDirection;
         int majorDirection;
         int groundX;
         int topX;
-
-        // double angle;
-        // int drawCount = 0;
+        cv::Mat frame;
+        // int key = cv::waitKey(100);
+        
         
         FixedQueue<int, 7> dirQueue; // Queue to store the last 5 directions
         std::vector<int> dirCounts{std::vector<int>(5, 0)}; // Store the number of times for each direction (default 0)
@@ -94,5 +100,10 @@ namespace DynamicObjectsAvoidance {
         dv::EventStore slice_;
 
         cv::Point2i pre_pos_;
+        std::vector<cv::Point2f>posVector;
+        int key;
+        std::thread imshowthread_;
+        void ImshowThread();
+
     };
 }  // namespace DynamicObjectsAvoidance

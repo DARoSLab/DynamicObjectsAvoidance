@@ -10,13 +10,26 @@ void Custom::UDPSend()
     udp.Send();
 }
 
+void Custom::Avoid(double robotDir) 
+{
+    // Get y velocity from event
+    // robotDir = event->GetCmdDir(); 
+    cmd.mode = 2;
+    cmd.gaitType = 1;
+    // Avoid by walking sideways
+    cmd.velocity[1] = robotDir; // -1  ~ +1
+    cmd.bodyHeight = 0.1;
+    // printf("Moving: %f\n", robotDir);
+}
+
+
 void Custom::RobotControl() 
 {
     motiontime += 2;
     udp.GetRecv(state);
 
-    // Get y velocity from event
-    robotDir = event->GetCmdDir(); 
+    // Check if action is initialized
+    firstMotion = event->GetInitAct();
 
     // Debug prints
     // printf("[%d]  EVENT (X,Y) VEL: (%d, %d)\n", motiontime, obsXvel, obsYvel);
@@ -29,7 +42,7 @@ void Custom::RobotControl()
     cmd.mode = 0; // 0:idle, default stand; 1:forced stand; 2:walk continuously
     cmd.gaitType = 0;
     cmd.speedLevel = 0;
-    cmd.footRaiseHeight = 0;
+    cmd.footRaiseHeight = 0;    
     cmd.bodyHeight = 0;
     cmd.euler[0]  = 0;
     cmd.euler[1] = 0;
@@ -45,59 +58,41 @@ void Custom::RobotControl()
         cmd.mode = 6;
     } else if(motiontime > 4000 && motiontime < 5000){
         cmd.mode = 0;
-    } else if (motiontime> 5000){
+    } else if (motiontime > 5000){
         
-        // Collision predicted
-        if (robotDir != 0.0f){
-            cmd.mode = 2;
-            cmd.gaitType = 1;
+        // Start moving
+        if (firstMotion == true && targetTime == 0 && targetTime2 == 0){
+            targetTime = motiontime + 2000;
+            targetTime2 = targetTime + 2000;
+            robotDir = event->GetCmdDir(); 
+            // printf("First motion control: %f", robotDir);
+            firstMotion = false;
+        } 
+        // printf("Motiontime: %d\n", motiontime);
+        // printf("Target time: %d\n", targetTime);
+        // printf("Target time2: %d\n", targetTime2);
+        
+        if (motiontime < targetTime){
+            // printf("1\n");
+            // printf("actual motion control: %f", robotDir);
+            Avoid(robotDir);
+            // cv::imshow("ts_color", ts_color);
+            // cv::waitKey(1);   
+        } else if (motiontime >= targetTime && motiontime < targetTime2) {
+            frame = event->GetImage();
 
-            // Avoid by walking sideways
-            cmd.velocity[1] = robotDir; // -1  ~ +1
-            cmd.bodyHeight = 0.1;
+            targetTime = 0;
+            // printf("2\n");
+            cv::namedWindow("Dynamic obstacle avoidance", cv::WINDOW_NORMAL);
+            cv::imshow("Dynamic obstacle avoidance", frame);
+            cv::waitKey(1);   
+            Avoid(0.0f);
+        } else if (motiontime >= targetTime2) {
+            targetTime2 = 0;
+            // printf("3\n");
+            // printf("Stopped\n");
         }
     }
-    
-    // else if (motiontime> 5000){
-    //     if (obsXvel > 50 && obsXvel < 100 && firstMotion == false) {
-    //         avoid_mode = Avoid_behavior::FACE_RIGHT;
-    //         targetTime = motiontime + 1000;
-    //     } else if (obsXvel < -50 && obsXvel > -100 && firstMotion == false) {
-    //         avoid_mode = Avoid_behavior::FACE_LEFT;
-    //         targetTime = motiontime + 1000; 
-    //     }
-        
-    //     // Avoid by walking sideways
-    //     if (avoid_mode == Avoid_behavior::FACE_RIGHT) {
-    //         printf("[%d] TURNING RIGHT\n", motiontime);
-    //         // cmd.mode = 1;
-    //         // cmd.euler[2] = 0.2;
-    //         // firstMotion = true;
-    //         cmd.mode = 2;
-    //         cmd.gaitType = 1;
-    //         cmd.velocity[1] = 0.2f; // -1  ~ +1
-    //         cmd.bodyHeight = 0.1;
-    //     } 
-
-    //     if (avoid_mode == Avoid_behavior::FACE_LEFT) {
-    //         printf("[%d] TURNING LEFT\n", motiontime);
-    //         // cmd.mode = 1;
-    //         // cmd.euler[2] = 0.2;
-    //         // firstMotion = true;
-    //         cmd.mode = 2;
-    //         cmd.gaitType = 1;
-    //         cmd.velocity[1] = -0.2f; // -1  ~ +1
-    //         cmd.bodyHeight = 0.1;
-    //     } 
-
-    //     if (targetTime == motiontime){
-    //         avoid_mode = Avoid_behavior::INITIAL;
-    //         cmd.mode = 0;
-    //         firstMotion = false;
-    //         targetTime = 0;
-    //     }
-        
-    // }
 
     udp.SetSend(cmd);
 }

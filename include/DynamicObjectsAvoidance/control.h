@@ -37,6 +37,7 @@ public:
     void UDPRecv();
     void UDPSend();
     void RobotControl();
+    void Avoid(double);
 
     DynamicObjectsAvoidance::DynamicObjectsAvoidance::Ptr event;
 
@@ -47,12 +48,15 @@ public:
 
     int motiontime = 0;
     int targetTime = 0;
+    int targetTime2 = 0;
     float dt = 0.002;  // 0.001~0.01
     int avoid_mode;
-    bool firstMotion = false;
+    cv::Mat frame;
     
 protected:
     double robotDir = 0; // y velocity
+    bool firstMotion = false;
+
     int obsXvel;
     int obsYvel;
 

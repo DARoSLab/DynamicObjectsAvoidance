@@ -36,7 +36,7 @@ visualize_alignment: 0
 # rgbd_dataset_path: /home/hochul/Repository/DynamicObjectsAvoidance/data/input/rgbd
 # timestamp_path: /home/hochul/Repository/DynamicObjectsAvoidance/data/input/rgbd_timestamp.txt
 # event_dataset_path: home/hochul/Repository/DynamicObjectsAvoidance/data/input/test.aedat4
-cfg_file_path: /home/hochul/Repository/DynamicObjectsAvoidance/config/default.yaml
+cfg_file_path: ../config/default.yaml
 
 # camera intrinsics
 camera.fx: 517.3

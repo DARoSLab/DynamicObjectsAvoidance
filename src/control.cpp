@@ -83,9 +83,11 @@ void Custom::RobotControl()
 
             targetTime = 0;
             // printf("2\n");
-            cv::namedWindow("Dynamic obstacle avoidance", cv::WINDOW_NORMAL);
-            cv::imshow("Dynamic obstacle avoidance", frame);
-            cv::waitKey(1);   
+
+            // comment out Shifan
+            // cv::namedWindow("Dynamic obstacle avoidance", cv::WINDOW_NORMAL);
+            // cv::imshow("Dynamic obstacle avoidance", frame);
+            // cv::waitKey(1);   
             Avoid(0.0f);
         } else if (motiontime >= targetTime2) {
             targetTime2 = 0;

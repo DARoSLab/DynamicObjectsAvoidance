@@ -168,8 +168,8 @@ void DataReader::EventsReadingThread() {
                     dv::EventStore store;
                     if (mNoiseFilter_ != nullptr) {
                         mNoiseFilter_->accept(*events);
-                        store = mNoiseFilter_->generateEvents();
-                        // store = *events;
+                        // store = mNoiseFilter_->generateEvents();
+                        store = *events;
                     } else {
                         store = *events;
                     }

@@ -10,8 +10,6 @@ DynamicObjectsAvoidance::DynamicObjectsAvoidance(std::string &config_path)
                                 320, 240, 1);
     time_surface_accumulator_ = std::make_unique<TimeSurfaceAccumulator>(cv::Size(320, 240));
     imshowthread_ = std::thread(&DynamicObjectsAvoidance::ImshowThread, this);
-
-
 }
 
 bool DynamicObjectsAvoidance::Init() {
@@ -66,12 +64,61 @@ void DynamicObjectsAvoidance::Run() {
 }
 
 void DynamicObjectsAvoidance::ImshowThread() {
-
+    LOG(INFO)<<"imshow thread";
     cv::Mat event_img = cv::Mat::zeros(240, 320, CV_8UC1);
+    cv::imshow("key_imshow", event_img);
     while (1) {
+        key = cv::waitKey(1);
+        std::this_thread::sleep_for(std::chrono::microseconds(10000)); // TODO: need to fix this
+    }
+}
+
+void fitLineRansac(const std::vector<cv::Point2f>& points,
+                   cv::Vec4f &line,
+                   int iterations = 300,
+                   double sigma = 1.,
+                   double k_min = -15.,
+                   double k_max = 15.)
+{
+    unsigned int n = points.size();
+
+    if(n<2)
+    {
+        return;
+    }
+
+    cv::RNG rng;
+    double bestScore = -1.;
+    for(int k=0; k<iterations; k++)
+    {
+        int i1=0, i2=0;
+        while(i1==i2)
         {
-            cv::imshow("event_img", event_img);
-            key = cv::waitKey(1);
+            i1 = rng(n);
+            i2 = rng(n);
+        }
+        const cv::Point2f& p1 = points[i1];
+        const cv::Point2f& p2 = points[i2];
+
+        cv::Point2f dp = p2-p1;
+        dp *= 1./norm(dp);
+        double score = 0;
+
+        if(dp.y/dp.x<=k_max && dp.y/dp.x>=k_min )
+        {
+            for(int i=0; i<n; i++)
+            {
+                cv::Point2f v = points[i]-p1;
+                double d = v.y*dp.x - v.x*dp.y;
+                //score += exp(-0.5*d*d/(sigma*sigma));
+                if( fabs(d)<sigma )
+                    score += 1;
+            }
+        }
+        if(score > bestScore)
+        {
+            line = cv::Vec4f(dp.x, dp.y, p1.x, p1.y);
+            bestScore = score;
         }
     }
 }
@@ -139,6 +186,28 @@ bool DynamicObjectsAvoidance::Step() {
                 cv::cvtColor(img_med, ts_color, cv::COLOR_GRAY2BGR);
                 cv::circle(ts_color, cv::Point(x, y), 5, cv::Scalar(0,0,255), 2, 8, 0);
                 cv::Point2i curr_pos = cv::Point2i(x, y);
+                cv::Point2f curr_posf = cv::Point2f(x, y);
+                posVector.push_back(curr_posf);
+                if (posVector.size() > 100) {
+                    posVector.erase(posVector.begin(), posVector.begin() + posVector.size() - 100);
+                }
+                LOG(INFO)<<"pos size = "<<posVector.size();
+                cv::Vec4f line;
+                fitLineRansac(posVector, line);
+
+                double k = line[1] / line[0];
+                double b = line[3] - k*line[2];
+
+                cv::Point p1,p2,p3;
+                p1.y = y;
+                p1.x = x;
+                p2.y = 239;
+                p2.x = (p2.y-b) / k;
+                p3.y = 1;
+                p3.x = (p3.y-b) / k;
+                // cv::line(ts_color,p1,p2,cv::Scalar(0,0,255),2);
+                // cv::line(ts_color,p1,p3,cv::Scalar(0,0,255),2);
+
                 cv::line(ts_color, pre_pos_, curr_pos, cv::Scalar(0, 255, 255), 1);
 
                 cv::line(ts_color, cv::Point(160-(int) Config::Get<int>("robotRadius"), 240), cv::Point(160+(int) Config::Get<int>("robotRadius"), 240), cv::Scalar(0, 0, 255), 4);
@@ -184,6 +253,8 @@ bool DynamicObjectsAvoidance::Step() {
                             + pow(curr_pos.y-pre_pos_.y, 2))))*40), int(((curr_pos.y-pre_pos_.y)/(sqrt(pow(curr_pos.x-pre_pos_.x, 2) 
                             + pow(curr_pos.y-pre_pos_.y, 2))))*40));
                         cv::arrowedLine(ts_color, curr_pos, curr_pos+direction, cv::Scalar(0, 255, 0), 2);
+                        cv::arrowedLine(ts_color, curr_pos, p2, cv::Scalar(255, 0, 0), 2);
+                        cv::arrowedLine(ts_color, curr_pos, p3, cv::Scalar(255, 0, 0), 2);
                         
                         // // Trajectory prediction
                         if (int(direction.x) != 0 && int(direction.y) != 0) {
@@ -246,8 +317,8 @@ bool DynamicObjectsAvoidance::Step() {
 
                     pre_pos_ = curr_pos;
 
-                    // cv::imshow("ts_color", ts_color);
-                    // cv::waitKey(1);         
+                    cv::imshow("ts_color", ts_color);
+                    cv::waitKey(1);         
                 }    
             } else { // No events
                 xVel = 0;

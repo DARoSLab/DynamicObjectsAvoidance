@@ -191,7 +191,7 @@ bool DynamicObjectsAvoidance::Step() {
                 if (posVector.size() > 100) {
                     posVector.erase(posVector.begin(), posVector.begin() + posVector.size() - 100);
                 }
-                LOG(INFO)<<"pos size = "<<posVector.size();
+                // LOG(INFO)<<"pos size = "<<posVector.size();
                 cv::Vec4f line;
                 fitLineRansac(posVector, line);
 
@@ -199,10 +199,13 @@ bool DynamicObjectsAvoidance::Step() {
                 double b = line[3] - k*line[2];
 
                 cv::Point p1,p2,p3;
+                // current
                 p1.y = y;
                 p1.x = x;
+                // bottom
                 p2.y = 239;
                 p2.x = (p2.y-b) / k;
+                // top
                 p3.y = 1;
                 p3.x = (p3.y-b) / k;
                 // cv::line(ts_color,p1,p2,cv::Scalar(0,0,255),2);
@@ -257,16 +260,16 @@ bool DynamicObjectsAvoidance::Step() {
                         cv::arrowedLine(ts_color, curr_pos, p3, cv::Scalar(255, 0, 0), 2);
                         
                         // // Trajectory prediction
-                        if (int(direction.x) != 0 && int(direction.y) != 0) {
-                            // Faling obstacle
-                            if (yVel < 0){
-                                double inclination = double(direction.y)/double(direction.x);
-                                // Pedicted ground collision (x, 240) -> pixel frame
-                                groundX = int((240-curr_pos.y)/inclination+curr_pos.x);
-                                auto extendedDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
-                                cv::arrowedLine(ts_color, curr_pos, extendedDirection, cv::Scalar(255, 255, 0), 1);    
-                            // Rising obstacle
-                            } 
+                        // if (int(direction.x) != 0 && int(direction.y) != 0) {
+                        //     // Faling obstacle
+                        //     if (yVel < 0){
+                        //         double inclination = double(direction.y)/double(direction.x);
+                        //         // Pedicted ground collision (x, 240) -> pixel frame
+                        //         groundX = int((240-curr_pos.y)/inclination+curr_pos.x);
+                        //         auto extendedDirection = cv::Point(groundX, 240); // y = -a(x-X)-Y
+                        //         cv::arrowedLine(ts_color, curr_pos, extendedDirection, cv::Scalar(255, 255, 0), 1);    
+                        //     // Rising obstacle
+                        //     } 
                             // else if (yVel > 0){
                             //     double inclination = double(direction.y)/double(direction.x);
                             //     // Pedicted ground collision (x, 240) -> pixel frame
@@ -279,39 +282,48 @@ bool DynamicObjectsAvoidance::Step() {
                             // }
 
                             // Define collision w/ robot
-                            if (160 - (int) Config::Get<int>("robotRadius") < groundX && 160 + (int) Config::Get<int>("robotRadius") > groundX) {
-                                collision = true;
-                            } else {
-                                collision = false;
-                            }
+                            // if (160 - (int) Config::Get<int>("robotRadius") < groundX && 160 + (int) Config::Get<int>("robotRadius") > groundX) {
+                            //     collision = true;
+                            // } else {
+                            //     collision = false;
+                            // }
 
-                            // Compare collision & send final command
-                            // if (collision && groundX > 160 && initAction == false) {
-                            if (collision && xVel >0 && initAction == false) {
-                                // inited_ = true;
-                                cmdDir = 0.7f; // robot left command
-                                initAction = true;
-                                printf("\nHit from right -> GO Left\n");
-                                frame = ts_color;
-                                // cv::Mat GetImage(ts_color);
-                                // printf("%f\n", cmdDir);
-                                // putText(ts_color, "Collision! CMD Left", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                        if ((160 - (int) Config::Get<int>("robotRadius") < p2.x && 160 + (int) Config::Get<int>("robotRadius") > p2.x && p2.y == 239) || (160 - (int) Config::Get<int>("robotRadius") < p2.x && 160 + (int) Config::Get<int>("robotRadius") > p2.x && p2.y == 1)) {
+                            collision = true;
+                        } else {
+                            collision = false;
+                        }
 
-                            // } else if (collision && groundX < 160 && initAction == false) {
-                            } else if (collision && xVel < 0 && initAction == false) {                                
-                                // inited_ = true;
-                                cmdDir = -0.7f; // robot right command
-                                initAction = true;
-                                printf("\nHIt from left -> GO Right\n");
-                                frame = ts_color;
-                                cv::Mat GetImage(ts_color);
 
-                                // printf("%f\n", cmdDir);
-                                // putText(ts_color, "Collision! CMD Right", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
-                            } 
+                        // Compare collision & send final command
+                        // if (collision && groundX > 160 && initAction == false) {
+                        // if (collision && xVel >0 && initAction == false) {
+                        if (collision && (p2.x < 160 || p3.x < 160) && initAction == false) {
+                            // inited_ = true;
+                            cmdDir = 0.7f; // robot left command
+                            initAction = true;
+                            printf("\nHit from right -> GO Left\n");
+                            // frame = ts_color;
+                            // cv::Mat GetImage(ts_color);
+                            // printf("%f\n", cmdDir);
+                            // putText(ts_color, "Collision! CMD Left", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+
+                        // } else if (collision && groundX < 160 && initAction == false) {
+                        // } else if (collision && xVel < 0 && initAction == false) {                                
+                        } else if (collision && (p2.x >= 160 || p3.x >= 160)&& initAction == false) {                                
+                            // inited_ = true;
+                            cmdDir = -0.7f; // robot right command
+                            initAction = true;
+                            printf("\nHIt from left -> GO Right\n");
+                            // frame = ts_color;
+                            // cv::Mat GetImage(ts_color);
+
+                            // printf("%f\n", cmdDir);
+                            // putText(ts_color, "Collision! CMD Right", text_position, cv::FONT_HERSHEY_COMPLEX, font_size,font_Color, font_weight);//Putting the text in the matrix//
+                        } 
                             
                             // initAction = false;
-                        }
+                        // }
 
                     }
 

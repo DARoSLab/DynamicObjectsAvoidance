@@ -51,7 +51,7 @@ public:
     int targetTime2 = 0;
     float dt = 0.002;  // 0.001~0.01
     int avoid_mode;
-    cv::Mat frame;
+    // cv::Mat frame;
     
 protected:
     double robotDir = 0; // y velocity

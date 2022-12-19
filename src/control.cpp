@@ -62,7 +62,7 @@ void Custom::RobotControl()
         
         // Start moving
         if (firstMotion == true && targetTime == 0 && targetTime2 == 0){
-            targetTime = motiontime + 2000;
+            targetTime = motiontime + 1000;
             targetTime2 = targetTime + 2000;
             robotDir = event->GetCmdDir(); 
             // printf("First motion control: %f", robotDir);
@@ -79,7 +79,7 @@ void Custom::RobotControl()
             // cv::imshow("ts_color", ts_color);
             // cv::waitKey(1);   
         } else if (motiontime >= targetTime && motiontime < targetTime2) {
-            frame = event->GetImage();
+            // frame = event->GetImage();
 
             targetTime = 0;
             // printf("2\n");
